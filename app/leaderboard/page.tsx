@@ -1,0 +1,4 @@
+import {ArrowLeft,ArrowUpRight} from 'lucide-react';
+import Leaderboard from './leaderboard-client';
+export const metadata={title:"Vote Leaderboard | Oro People's Choice"};
+export default function LeaderboardPage(){return <><div className="preview-banner"><span className="status-dot"/>ORO PAGEANT · THE PEOPLE’S CHOICE<span className="banner-divider">/</span><span>Official voting opens soon</span></div><header className="header"><a href="/" className="brand"><span>ORO<span className="brand-year">LEADERBOARD</span></span></a><a href="/#contestants" className="text-link"><ArrowLeft size={14}/>Meet the contestants</a><a href="/admin" className="text-link">Admin login <ArrowUpRight size={14}/></a></header><main><Leaderboard/></main><footer><p>Oro Province, Papua New Guinea · Practice voting preview</p></footer></>}

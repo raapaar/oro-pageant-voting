@@ -1,0 +1,16 @@
+import assert from 'node:assert/strict';
+import {rankContestants} from '../lib/leaderboard.ts';
+import {isAdminIdentity} from '../lib/admin-policy.ts';
+const contestants=['a','b','c','d'].map(id=>({id,name:id.toUpperCase(),district:'Sohe',community:'',bio:'',image:''}));
+const ranked=rankContestants(contestants,[{id:'a',count:4},{id:'b',count:4},{id:'c',count:2},{id:'not-a-contestant',count:50}]);
+assert.equal(ranked.total,10);
+assert.deepEqual(ranked.rows.map(r=>r.rank),[1,1,3,null]);
+assert.deepEqual(ranked.rows.map(r=>r.share),[40,40,20,0]);
+assert(rankContestants(contestants,[]).rows.every(r=>r.rank===null && r.share===0));
+assert.equal(rankContestants(contestants,[{id:'d',count:8}]).rows[0].id,'d');
+assert(!isAdminIdentity(undefined,'admin@example.test'));
+assert(!isAdminIdentity('visitor@example.test','admin@example.test'));
+assert(!isAdminIdentity('admin@example.test',undefined));
+assert(!isAdminIdentity('admin@example.test',' '));
+assert(isAdminIdentity('Admin@Example.Test','admin@example.test'));
+console.log('PASS: leaderboard sorting, ties, zero votes, percentages, ignored unknown IDs, and fail-closed administrator policy.');

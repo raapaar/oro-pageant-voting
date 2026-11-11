@@ -1,0 +1,10 @@
+import { z } from 'zod';
+export const contestantSchema = z.object({ id: z.string().regex(/^[a-z0-9-]{1,40}$/), name: z.string().trim().min(1).max(80), district: z.enum(['Ijivitari', 'Sohe']), community: z.string().trim().max(100), bio: z.string().trim().max(600), image: z.string().max(1000).refine(v => !v || /^https:\/\//.test(v), 'Use an HTTPS photo URL') });
+export const eventSchema = z.object({ title: z.string().trim().min(1).max(100), year: z.string().regex(/^20\d{2}$/), description: z.string().trim().min(1).max(600), date: z.string().max(80), venue: z.string().max(120), contestants: z.array(contestantSchema).min(1).max(30) }).refine(v => new Set(v.contestants.map(c => c.id)).size === v.contestants.length, 'Contestant IDs must be unique');
+export type EventData = z.infer<typeof eventSchema>;
+export const defaultEvent: EventData = { title: 'Oro Provincial Pageant', year: '2026', description: 'Celebrating the women, stories and extraordinary spirit of Oro. Stand behind a voice. Be part of her journey.', date: 'To be announced', venue: 'Oro Province, Papua New Guinea', contestants: [
+        { id: 'contestant-01', name: 'Contestant 01', district: 'Ijivitari', community: 'Community to be announced', bio: 'Every journey begins with a story. The official contestant profile, community and advocacy will be introduced here.', image: '' },
+        { id: 'contestant-02', name: 'Contestant 02', district: 'Sohe', community: 'Community to be announced', bio: 'A voice for her community. Meet this contestant and discover the cause she will champion when event details are announced.', image: '' },
+        { id: 'contestant-03', name: 'Contestant 03', district: 'Ijivitari', community: 'Community to be announced', bio: 'Culture, confidence and purpose. The official biography and advocacy will be added by the event organisers.', image: '' },
+        { id: 'contestant-04', name: 'Contestant 04', district: 'Sohe', community: 'Community to be announced', bio: 'A new chapter for Oro. Get to know her story here once the official contestant announcement is made.', image: '' }
+    ] };

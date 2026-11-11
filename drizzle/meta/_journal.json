@@ -1,0 +1,20 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1794147691504,
+      "tag": "0000_lazy_morg",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1794361921104,
+      "tag": "0001_outgoing_randall_flagg",
+      "breakpoints": true
+    }
+  ]
+}

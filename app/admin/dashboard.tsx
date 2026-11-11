@@ -1,0 +1,15 @@
+'use client';
+import {useState} from 'react';
+import {ArrowUpRight,ShieldCheck,LogOut,Upload,Loader2,Users,BarChart3} from 'lucide-react';
+import Leaderboard from '../leaderboard/leaderboard-client';
+export default function AdminDashboard(){
+    const [busy,setBusy]=useState(false),[message,setMessage]=useState('');
+    async function publish(){
+        if(!confirm('Publish your last saved draft as the public lineup? This starts a fresh practice voting round. Existing ballots will be retained in their previous round.'))return;
+        setBusy(true);
+        try{const response=await fetch('/api/admin/publish',{method:'POST'});const value=await response.json() as {message:string;error?:string};if(!response.ok)throw Error(value.error);setMessage(value.message)}
+        catch(e){setMessage(e instanceof Error?e.message:'Publishing failed.');}
+        finally{setBusy(false)}
+    }
+    return <><div className="preview-banner"><span className="status-dot"/>ORO PAGEANT · ADMINISTRATOR<span className="banner-divider">/</span><span>Secure organiser workspace</span></div><header className="header"><a className="brand" href="/"><span>ORO<span className="brand-year">ADMIN</span></span></a><a href="/" className="text-link">View public pageant <ArrowUpRight size={15}/></a><a href="/signout-with-chatgpt?return_to=%2Fadmin" target="_top" className="text-link">Sign out <LogOut size={15}/></a></header><main className="admin-main"><div className="studio-top"><div><div className="eyebrow">BEHIND THE SPOTLIGHT</div><h1>Welcome, organiser.</h1><p>Your lineup, your event details, and a clear view of the people’s voice.</p></div><span className="admin-badge"><ShieldCheck size={16}/>Administrator</span></div><div className="admin-cards"><a href="/studio" className="admin-card"><Users size={23}/><h2>Manage the event</h2><p>Add, edit or remove contestants. Update portraits, biographies, dates and venue in your private draft.</p><span>Edit event & contestants <ArrowUpRight size={16}/></span></a><a href="/?preview=draft" className="admin-card"><BarChart3 size={23}/><h2>Preview your draft</h2><p>Check your saved event details before they appear on the public site. Draft ballots stay separate.</p><span>Open private draft <ArrowUpRight size={16}/></span></a><div className="admin-card"><Upload size={23}/><h2>Publish the lineup</h2><p>Make your last saved draft visible to everyone. Publishing creates a fresh practice round.</p><button onClick={publish} disabled={busy}>{busy?<Loader2 size={16} className="spin"/>:null}Publish saved draft <ArrowUpRight size={16}/></button></div></div>{message&&<div role="status" className="studio-message">{message} <a href="/leaderboard" className="text-link">View current standings <ArrowUpRight size={14}/></a></div>}<div className="studio-notice"><ShieldCheck size={20}/><p><strong>Public site is a practice preview.</strong><br/>Official ballots and payments remain disabled. Confirm eligibility, vote limits and event dates before enabling official voting.</p></div><Leaderboard admin/></main></>;
+}
